@@ -540,24 +540,6 @@ body {
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .products-list {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-    }
-    
-    .calculator-display {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .total-display {
-        min-width: auto;
-        width: 100%;
-    }
-}
-
 @media (max-width: 480px) {
     .app-container {
         margin: 0;
