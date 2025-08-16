@@ -10,6 +10,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve sw.js and index without cache to ensure clients fetch latest SW and HTML
+app.use((req, res, next) => {
+  if (req.url === '/sw.js' || req.url === '/index.html' || req.url === '/') {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  }
+  next();
+});
+
 // Rota principal
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

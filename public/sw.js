@@ -1,49 +1,65 @@
-const CACHE_NAME = 'calculadora-festa-v2';
-const urlsToCache = [
+const CACHE_VERSION = 'v2'; // atualize quando publicar nova versão
+const CACHE_NAME = `calculadora-${CACHE_VERSION}`;
+const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/styles.css',
-  '/script.js',
-  '/manifest.json'
+  '/public/script.js', // ajuste o caminho se necessário
+  '/favicon.ico'
 ];
 
 // Instalação do service worker
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
   );
 });
 
 // Interceptação de requisições
 self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  // Network-first for navigations (index.html)
+  if (req.mode === 'navigate' || (req.method === 'GET' && req.headers.get('accept')?.includes('text/html'))) {
+    event.respondWith(
+      fetch(req).then(resp => {
+        const copy = resp.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
+        return resp;
+      }).catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // For other requests: cache-first then network fallback, and update cache in background
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Retorna do cache se disponível
-        if (response) {
-          return response;
+    caches.match(req).then(cached => {
+      const networkFetch = fetch(req).then(response => {
+        if (response && response.status === 200) {
+          caches.open(CACHE_NAME).then(cache => cache.put(req, response.clone()));
         }
-        // Caso contrário, busca na rede
-        return fetch(event.request);
-      }
-    )
+        return response;
+      }).catch(() => null);
+      return cached || networkFetch;
+    })
   );
 });
 
 // Ativação do service worker
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches.keys().then(keys =>
+      Promise.all(keys.map(k => {
+        if (k !== CACHE_NAME) return caches.delete(k);
+      }))
+    ).then(() => self.clients.claim())
   );
+});
+
+// allow client to tell SW to skipWaiting
+self.addEventListener('message', (event) => {
+  if (!event.data) return;
+  if (event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
