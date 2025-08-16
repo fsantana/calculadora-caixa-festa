@@ -1,5 +1,5 @@
 {
-  "name": "calculadora-festa-igreja",
+  "name": "calculadora-caixa-festa",
   "version": "1.0.0",
   "description": "Calculadora PWA para festas de igreja",
   "main": "server.js",
@@ -8,7 +8,7 @@
     "dev": "nodemon server.js",
     "build": "echo 'Build completed'"
   },
-  "keywords": ["pwa", "calculadora", "igreja", "festa"],
+  "keywords": ["pwa", "calculadora", "caixa", "festa"],
   "author": "Seu Nome",
   "license": "MIT",
   "dependencies": {
