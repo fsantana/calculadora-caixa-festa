@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4CAF50">
+    <title>Calculadora Festa Igreja</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" type="image/svg+xml" href="/icons/icon-192x192.svg">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🧮 Calculadora Festa</h1>
+            <div class="header-buttons">
+                <button id="updateBtn" class="config-btn" title="Verificar Atualizações" style="margin-right: 0.5rem;">
+                    🔄
+                </button>
+                <button id="configBtn" class="config-btn" title="Configurações">
+                    ⚙️
+                </button>
+            </div>
+        </header>
+
+        <!-- Display da calculadora -->
+        <div class="calculator-display">
+            <div class="total-display">
+                <span class="total-label">Total:</span>
+                <span id="totalValue" class="total-value">R$ 0,00</span>
+            </div>
+            <div class="history-display" id="historyDisplay">
+                <!-- Histórico será inserido aqui -->
+            </div>
+        </div>
+
+        <!-- Lista de produtos -->
+        <div class="products-section">
+            <h3>Produtos Cadastrados</h3>
+            <div class="products-list" id="productsList">
+                <!-- Produtos serão inseridos aqui -->
+            </div>
+        </div>
+
+        <!-- Calculadora -->
+        <div class="calculator-section">
+            <div class="calculator">
+                <div class="calc-display">
+                    <input type="text" id="calcInput" class="calc-input" placeholder="0" readonly>
+                </div>
+                <div class="calc-buttons">
+                    <button class="calc-btn clear" onclick="clearCalculator()">C</button>
+                    <button class="calc-btn operator" onclick="addToCalculator('+')">+</button>
+                    <button class="calc-btn operator" onclick="addToCalculator('-')">-</button>
+                    <button class="calc-btn operator" onclick="addToCalculator('*')">×</button>
+                    
+                    <button class="calc-btn number" onclick="addToCalculator('7')">7</button>
+                    <button class="calc-btn number" onclick="addToCalculator('8')">8</button>
+                    <button class="calc-btn number" onclick="addToCalculator('9')">9</button>
+                    <button class="calc-btn operator" onclick="addToCalculator('/')">÷</button>
+                    
+                    <button class="calc-btn number" onclick="addToCalculator('4')">4</button>
+                    <button class="calc-btn number" onclick="addToCalculator('5')">5</button>
+                    <button class="calc-btn number" onclick="addToCalculator('6')">6</button>
+                    <button class="calc-btn equals" onclick="calculateResult()">=</button>
+                    
+                    <button class="calc-btn number" onclick="addToCalculator('1')">1</button>
+                    <button class="calc-btn number" onclick="addToCalculator('2')">2</button>
+                    <button class="calc-btn number" onclick="addToCalculator('3')">3</button>
+                    <button class="calc-btn number" onclick="addToCalculator('0')">0</button>
+                    
+                    <button class="calc-btn decimal" onclick="addToCalculator('.')">.</button>
+                    <button class="calc-btn add-value" onclick="addManualValue()">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de configurações -->
+        <div id="configModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Configurações</h2>
+                    <span class="close" onclick="closeConfigModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="product-form">
+                        <h3>Adicionar Produto</h3>
+                        <div class="form-group">
+                            <label for="productName">Nome do Produto:</label>
+                            <input type="text" id="productName" placeholder="Ex: Bolo">
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">Preço (R$):</label>
+                            <input type="number" id="productPrice" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="productOrder">Ordem:</label>
+                            <input type="number" id="productOrder" min="1" placeholder="1">
+                        </div>
+                        <button onclick="addProduct()" class="add-product-btn">Adicionar Produto</button>
+                    </div>
+                    
+                    <div class="products-management">
+                        <h3>Produtos Cadastrados</h3>
+                        <div id="configProductsList" class="config-products-list">
+                            <!-- Lista de produtos para edição será inserida aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+        <!-- Botão de instalação PWA -->
+        <div id="installPrompt" class="install-prompt" style="display: none;">
+            <p>Instale este app no seu celular!</p>
+            <button id="installBtn" class="install-btn">Instalar</button>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
