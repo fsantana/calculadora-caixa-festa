@@ -67,25 +67,39 @@ body {
     background: #f8f9fa;
     padding: 1rem;
     border-bottom: 1px solid #e9ecef;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
 }
 
 .total-display {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
-    margin-bottom: 1rem;
+    min-width: 120px;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    flex: 1;
+    position: sticky;
+    top: 1rem;
 }
 
 .total-label {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #495057;
+    margin-bottom: 0.5rem;
 }
 
 .total-value {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #4CAF50;
+    text-align: center;
 }
 
 .history-display {
@@ -94,18 +108,25 @@ body {
     border-radius: 8px;
     padding: 0.5rem;
     min-height: 60px;
-    max-height: 120px;
-    overflow-y: auto;
     font-size: 0.9rem;
     color: #6c757d;
+    flex: 2;
 }
 
 .history-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0;
+    padding: 0.75rem 0;
     border-bottom: 1px solid #f8f9fa;
+    transition: background-color 0.2s ease;
+}
+
+.history-item:hover {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 .history-label {
@@ -163,7 +184,8 @@ body {
 
 .products-list {
     display: grid;
-    gap: 0.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
 }
 
 .product-item {
@@ -177,6 +199,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    min-height: 60px;
 }
 
 .product-item:hover {
@@ -506,6 +529,23 @@ body {
 }
 
 /* Responsividade */
+@media (max-width: 768px) {
+    .products-list {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .calculator-display {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .total-display {
+        min-width: auto;
+        width: 100%;
+    }
+}
+
 @media (max-width: 480px) {
     .app-container {
         margin: 0;
@@ -528,6 +568,10 @@ body {
     .modal-content {
         margin: 10% auto;
         width: 95%;
+    }
+    
+    .products-list {
+        gap: 0.5rem;
     }
 }
 
