@@ -160,9 +160,17 @@ function loadProducts() {
     } else {
         // Produtos padrão
         products = [
-            { id: 1, name: 'Bolo', price: 25.00, order: 1 },
-            { id: 2, name: 'Refrigerante', price: 8.50, order: 2 },
-            { id: 3, name: 'Salgados', price: 15.00, order: 3 }
+            { id: 1, name: 'Nhoque', price: 30.00, order: 1 },
+            { id: 2, name: 'Risoto de Frango', price: 25.00, order: 2 },
+            { id: 3, name: 'Maionese', price: 15.00, order: 3 },
+            { id: 4, name: 'Saladas', price: 12.00, order: 4 },
+            { id: 5, name: 'Sobremesa', price: 10.00, order: 5 },
+            { id: 6, name: 'Pastel', price: 7.00, order: 6 },
+            { id: 7, name: 'Bolo fatia', price: 7.00, order: 7 },
+            { id: 8, name: 'Bolo N.Sra', price: 10.00, order: 8 },
+            { id: 9, name: 'Refrigerante', price: 7.00, order: 9 },
+            { id: 10, name: 'Suco', price: 7.00, order: 10 },
+            { id: 11, name: 'Agua', price: 3.00, order: 11 }
         ];
         saveProducts();
     }
