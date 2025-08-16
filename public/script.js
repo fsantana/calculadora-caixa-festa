@@ -12,8 +12,24 @@ function removeHistoryItem(id) {
     const item = history.find(h => h.id === id);
     if (item) {
         console.log('Item encontrado:', item);
-        total -= item.value;
-        history = history.filter(h => h.id !== id);
+        
+        if (item.type === 'product') {
+            // Para produtos cadastrados, decrementar quantidade
+            if (item.quantity > 1) {
+                item.quantity -= 1;
+                item.totalValue = item.unitValue * item.quantity;
+                total -= item.unitValue;
+            } else {
+                // Se quantidade chegar a zero, remover o item
+                total -= item.totalValue;
+                history = history.filter(h => h.id !== id);
+            }
+        } else {
+            // Para valores manuais, remover completamente
+            total -= item.value;
+            history = history.filter(h => h.id !== id);
+        }
+        
         console.log('Total atualizado:', total);
         console.log('Histórico após remoção:', history);
         updateDisplay();
@@ -299,14 +315,43 @@ function addProductToTotal(product) {
 }
 
 function addToHistory(label, value) {
-    const historyItem = {
-        id: Date.now() + Math.random(), // ID único para cada item
-        label: label,
-        value: value
-    };
-    
-    history.push(historyItem);
-    total += value;
+    // Se for um produto cadastrado (não valor manual), agrupar por quantidade
+    if (label !== 'Valor manual') {
+        const existingItem = history.find(item => item.label === label && item.type === 'product');
+        
+        if (existingItem) {
+            // Incrementar quantidade e recalcular valor total
+            existingItem.quantity += 1;
+            existingItem.totalValue = existingItem.unitValue * existingItem.quantity;
+            
+            // Atualizar o total geral
+            total = total - (existingItem.totalValue - existingItem.unitValue) + existingItem.totalValue;
+        } else {
+            // Criar novo item agrupado
+            const historyItem = {
+                id: Date.now() + Math.random(),
+                label: label,
+                type: 'product',
+                unitValue: value,
+                quantity: 1,
+                totalValue: value
+            };
+            
+            history.push(historyItem);
+            total += value;
+        }
+    } else {
+        // Valor manual - adicionar normalmente
+        const historyItem = {
+            id: Date.now() + Math.random(),
+            label: label,
+            type: 'manual',
+            value: value
+        };
+        
+        history.push(historyItem);
+        total += value;
+    }
     
     updateDisplay();
     saveHistory();
@@ -330,15 +375,30 @@ function updateDisplay() {
             history.forEach(item => {
                 const historyItem = document.createElement('div');
                 historyItem.className = 'history-item';
-                historyItem.innerHTML = `
-                    <span class="history-label">${item.label}</span>
-                    <div class="history-actions">
-                        <span class="history-value">R$ ${item.value.toFixed(2)}</span>
-                        <button class="remove-item-btn" onclick="removeHistoryItem('${item.id}')" title="Remover item" data-id="${item.id}">
-                            🗑️
-                        </button>
-                    </div>
-                `;
+                
+                if (item.type === 'product') {
+                    // Item agrupado com quantidade
+                    historyItem.innerHTML = `
+                        <span class="history-label">${item.label} (${item.quantity}x)</span>
+                        <div class="history-actions">
+                            <span class="history-value">R$ ${item.totalValue.toFixed(2)}</span>
+                            <button class="remove-item-btn" onclick="removeHistoryItem('${item.id}')" title="Remover 1 unidade" data-id="${item.id}">
+                                🗑️
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    // Valor manual
+                    historyItem.innerHTML = `
+                        <span class="history-label">${item.label}</span>
+                        <div class="history-actions">
+                            <span class="history-value">R$ ${item.value.toFixed(2)}</span>
+                            <button class="remove-item-btn" onclick="removeHistoryItem('${item.id}')" title="Remover item" data-id="${item.id}">
+                                🗑️
+                            </button>
+                        </div>
+                    `;
+                }
                 
                 // Adicionar event listener diretamente para garantir funcionamento
                 const removeBtn = historyItem.querySelector('.remove-item-btn');
